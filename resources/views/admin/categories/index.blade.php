@@ -21,7 +21,7 @@
                 <td>{{ $category->id }}</td>
                 <td>{{ $category->name }}</td>
                 <td>
-                    <a href=""><i class="glyphicon glyphicon-edit pull-left"></i></a>
+                    <a href="{{ route('admin.categories.edit', $category->id) }}"><i class="glyphicon glyphicon-edit pull-left"></i></a>
                     <a href=""><i class="glyphicon glyphicon-trash pull-right"></i></a>
                 </td>
             </tr>
