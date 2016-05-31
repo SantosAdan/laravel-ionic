@@ -2,21 +2,35 @@
 
 namespace CodeDelivery\Http\Controllers;
 
+use CodeDelivery\Http\Requests\AdminCategoryRequest;
 use CodeDelivery\Repositories\CategoryRepository;
 use Illuminate\Http\Request;
 use CodeDelivery\Http\Requests;
 
 class CategoriesController extends Controller
 {
+    /*
+     * @var CategoryRepository
+     */
+    private $repository;
+
+    /**
+     * CategoriesController constructor.
+     * @param CategoryRepository $repository
+     */
+    public function __construct(CategoryRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @param CategoryRepository $repository
      * @return \Illuminate\Http\Response
      */
-    public function index(CategoryRepository $repository)
+    public function index()
     {
-        $categories = $repository->paginate(5);
+        $categories = $this->repository->paginate();
 
         return view('admin.categories.index', compact('categories'));
     }
@@ -34,12 +48,15 @@ class CategoriesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param AdminCategoryRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AdminCategoryRequest $request)
     {
+        $data = $request->all();
+        $this->repository->create($data);
 
+        return redirect()->route('admin.categories.index');
     }
 
     /**
@@ -61,19 +78,25 @@ class CategoriesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $category = $this->repository->find($id);
+
+        return view('admin.categories.edit', compact('category'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param AdminCategoryRequest|Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AdminCategoryRequest $request, $id)
     {
-        //
+        $data = $request->all();
+        $this->repository->update($data, $id);
+
+
+        return redirect()->route('admin.categories.index');
     }
 
     /**
