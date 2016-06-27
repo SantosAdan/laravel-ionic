@@ -4,7 +4,7 @@ namespace CodeDelivery\Http\Requests;
 
 use CodeDelivery\Http\Requests\Request;
 
-class AdminCategoryRequest extends Request
+class AdminClientRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,13 @@ class AdminCategoryRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required|min:3',
+            'user.name' => 'required|min:3|max:50',
+            'user.email' => 'required|email',
+            'phone' => 'numeric',
+            'address' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'zipcode' => 'required|numeric'
         ];
     }
 }
