@@ -17,6 +17,11 @@ class Order extends Model implements Transformable
         'status'
     ];
 
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
+
     public function items()
     {
         return $this->hasMany(OrderItem::class);
@@ -24,7 +29,26 @@ class Order extends Model implements Transformable
 
     public function deliveryman()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_deliveryman_id', 'id');
     }
 
+    // ============================== Accessors ============================
+    public function getStatusAttribute($value)
+    {
+        switch ($value) {
+            case 0:
+                return $this->status = 'Pendente';
+                break;
+            case 1:
+                return $this->status = 'A caminho';
+                break;
+            case 2:
+                return $this->status = 'Entregue';
+                break;
+            case 3:
+                return $this->status = 'Cancelado';
+                break;
+        }
+    }
+    // ================================================================
 }

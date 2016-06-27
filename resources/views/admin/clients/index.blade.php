@@ -2,9 +2,9 @@
 
 @section('content')
     <div class="container">
-        <h3>Categorias</h3>
+        <h3>Clientes</h3>
 
-        <a href="{{ route('admin.categories.create') }}" class="btn btn-xs btn-info">Nova Categoria</a>
+        <a href="{{ route('admin.clients.create') }}" class="btn btn-xs btn-info">Novo Cliente</a>
         <br/><br>
 
         <table class="table table-bordered">
@@ -16,12 +16,12 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($categories as $category)
+            @foreach($clients as $client)
             <tr>
-                <td>{{ $category->id }}</td>
-                <td>{{ $category->name }}</td>
+                <td>{{ $client->user->id }}</td>
+                <td>{{ $client->user->name }}</td>
                 <td>
-                    <a href="{{ route('admin.categories.edit', $category->id) }}"><i class="glyphicon glyphicon-edit pull-left"></i></a>
+                    <a href="{{ route('admin.clients.edit', $client->id) }}"><i class="glyphicon glyphicon-edit pull-left"></i></a>
                     <a href=""><i class="glyphicon glyphicon-trash pull-right"></i></a>
                 </td>
             </tr>
@@ -30,7 +30,7 @@
         </table>
 
         <div class="col-sm-5 col-sm-offset-5">
-            {!! $categories->render() !!}
+            {!! $clients->render() !!}
         </div>
     </div>
 @endsection

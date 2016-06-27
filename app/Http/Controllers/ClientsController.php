@@ -2,25 +2,29 @@
 
 namespace CodeDelivery\Http\Controllers;
 
-use CodeDelivery\Http\Requests\AdminCategoryRequest;
-use CodeDelivery\Repositories\CategoryRepository;
 use Illuminate\Http\Request;
 use CodeDelivery\Http\Requests;
+use CodeDelivery\Services\ClientService;
+use CodeDelivery\Http\Controllers\Controller;
+use CodeDelivery\Repositories\ClientRepository;
+use CodeDelivery\Http\Requests\AdminClientRequest;
 
-class CategoriesController extends Controller
+class ClientsController extends Controller
 {
-    /*
-     * @var CategoryRepository
+     /*
+     * @var ClientRepository
      */
     private $repository;
+    private $clientService;
 
     /**
-     * CategoriesController constructor.
-     * @param CategoryRepository $repository
+     * ClientsController constructor.
+     * @param ClientRepository $repository
      */
-    public function __construct(CategoryRepository $repository)
+    public function __construct(ClientRepository $repository, ClientService $clientService)
     {
         $this->repository = $repository;
+        $this->clientService = $clientService;
     }
 
     /**
@@ -30,9 +34,9 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $categories = $this->repository->paginate();
+        $clients = $this->repository->paginate();
 
-        return view('admin.categories.index', compact('categories'));
+        return view('admin.clients.index', compact('clients'));
     }
 
     /**
@@ -42,21 +46,21 @@ class CategoriesController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.create');
+        return view('admin.clients.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param AdminCategoryRequest $request
+     * @param AdminClientRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AdminCategoryRequest $request)
+    public function store(AdminClientRequest $request)
     {
         $data = $request->all();
-        $this->repository->create($data);
+        $this->clientService->create($data);
 
-        return redirect()->route('admin.categories.index');
+        return redirect()->route('admin.clients.index');
     }
 
     /**
@@ -78,25 +82,24 @@ class CategoriesController extends Controller
      */
     public function edit($id)
     {
-        $category = $this->repository->find($id);
+        $client = $this->repository->find($id);
 
-        return view('admin.categories.edit', compact('category'));
+        return view('admin.clients.edit', compact('client'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param AdminCategoryRequest|Request $request
+     * @param AdminClientRequest|Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(AdminCategoryRequest $request, $id)
+    public function update(AdminClientRequest $request, $id)
     {
         $data = $request->all();
-        $this->repository->update($data, $id);
+        $this->clientService->update($data, $id);
 
-
-        return redirect()->route('admin.categories.index');
+        return redirect()->route('admin.clients.index');
     }
 
     /**
