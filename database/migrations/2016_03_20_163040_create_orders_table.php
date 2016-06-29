@@ -21,6 +21,10 @@ class CreateOrdersTable extends Migration
             $table->integer('user_deliveryman_id')->unsigned()->nullable();
             $table->foreign('user_deliveryman_id')->references('id')->on('users');
 
+            $table->integer('cupom_id')->unsigned()->nullable();
+            $table->foreign('cupom_id')->references('id')->on('cupoms')
+                        ->onUpdate('cascade')->onDelete('cascade');
+
             $table->decimal('total');
             $table->smallInteger('status')->default(0);
 
