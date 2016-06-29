@@ -31,5 +31,8 @@ class RepositoryServiceProvider extends ServiceProvider
 
         App::bind('CodeDelivery\Repositories\UserRepository',
             'CodeDelivery\Repositories\UserRepositoryEloquent');
+
+        App::bind('CodeDelivery\Repositories\CupomRepository',
+            'CodeDelivery\Repositories\CupomRepositoryEloquent');
     }
 }
