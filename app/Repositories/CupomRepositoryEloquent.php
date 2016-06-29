@@ -4,15 +4,14 @@ namespace CodeDelivery\Repositories;
 
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use CodeDelivery\Repositories\ProductRepository;
-use CodeDelivery\Models\Product;
-use CodeDelivery\Validators\ProductValidator;;
+use CodeDelivery\Repositories\CupomRepository;
+use CodeDelivery\Models\Cupom;
 
 /**
- * Class ProductRepositoryEloquent
+ * Class CupomRepositoryEloquent
  * @package namespace CodeDelivery\Repositories;
  */
-class ProductRepositoryEloquent extends BaseRepository implements ProductRepository
+class CupomRepositoryEloquent extends BaseRepository implements CupomRepository
 {
     /**
      * Specify Model class name
@@ -21,7 +20,7 @@ class ProductRepositoryEloquent extends BaseRepository implements ProductReposit
      */
     public function model()
     {
-        return Product::class;
+        return Cupom::class;
     }
 
     /**
@@ -30,10 +29,5 @@ class ProductRepositoryEloquent extends BaseRepository implements ProductReposit
     public function boot()
     {
         $this->pushCriteria(app(RequestCriteria::class));
-    }
-
-    public function lists()
-    {
-        return $this->model->get(['id', 'name', 'price']);
     }
 }
