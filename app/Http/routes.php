@@ -77,7 +77,7 @@ Route::post('oauth/access_token', function() {
 });
 
 Route::group(['prefix' => 'api', 'as' => 'api.', 'middleware' => 'oauth'], function() {
-    Route::get('/pedidos', function() {
+    Route::get('/teste', function() {
         return [
             'id' => 1,
             'client' => 'Luiz Carlos',
