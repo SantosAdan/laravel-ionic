@@ -72,16 +72,24 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.', 'middleware' => 'auth
     });
 });
 
+// Rota para gerar oauth token
 Route::post('oauth/access_token', function() {
     return Response::json(Authorizer::issueAccessToken());
 });
 
 Route::group(['prefix' => 'api', 'as' => 'api.', 'middleware' => 'oauth'], function() {
-    Route::get('/pedidos', function() {
-        return [
-            'id' => 1,
-            'client' => 'Luiz Carlos',
-            'value' => 10.00
-        ];
+    Route::get('/authenticated', ['as' => 'authenticated', 'uses' => 'Api\UserController@authenticated']);
+    //API CLIENTE
+    Route::group(['prefix' => 'client', 'as' => 'client.', 'middleware' => 'oauth.checkrole:client'], function () {
+        // Rotas para pedidos
+        Route::resource('order',
+            'Api\Client\ClientCheckoutController',
+            ['except' => ['create', 'edit', 'destroy']]
+        );
+    });
+
+    //API ENTREGADOR
+    Route::group(['prefix' => 'deliveryman', 'as' => 'deliveryman.', 'middleware' => 'oauth.checkrole:deliveryman'], function () {
+
     });
 });
