@@ -2,11 +2,12 @@
 
 namespace CodeDelivery\Repositories;
 
+use CodeDelivery\Models\User;
+use CodeDelivery\Presenters\UserPresenter;
+use CodeDelivery\Validators\UserValidator;;
+use CodeDelivery\Repositories\UserRepository;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use CodeDelivery\Repositories\UserRepository;
-use CodeDelivery\Models\User;
-use CodeDelivery\Validators\UserValidator;;
 
 /**
  * Class UserRepositoryEloquent
@@ -14,6 +15,8 @@ use CodeDelivery\Validators\UserValidator;;
  */
 class UserRepositoryEloquent extends BaseRepository implements UserRepository
 {
+    protected $skipPresenter = true;
+
     /**
      * Specify Model class name
      *
@@ -30,6 +33,11 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
     public function boot()
     {
         $this->pushCriteria(app(RequestCriteria::class));
+    }
+
+    public function presenter()
+    {
+        return UserPresenter::class;
     }
 
     /**
