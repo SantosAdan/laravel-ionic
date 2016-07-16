@@ -4,6 +4,16 @@
     <div class="container">
         <h3>Novo Pedido</h3>
 
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="container">
         {!! Form::open(['route' => 'customer.order.store', 'class' => 'form-horizontal']) !!}
 

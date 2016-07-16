@@ -2,8 +2,6 @@
 
 namespace CodeDelivery\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
-use CodeDelivery\Http\Requests;
 use CodeDelivery\Http\Controllers\Controller;
 use CodeDelivery\Repositories\UserRepository;
 use LucaDegasperi\OAuth2Server\Facades\Authorizer;
@@ -13,10 +11,8 @@ class UserController extends Controller
     protected $repository;
 
     /**
-     * Checkout Controller constructor.
-     * @param OrderRepository   $orderRepository
+     * User Controller constructor.
      * @param UserRepository    $userRepository
-     * @param ProductRepository $productRepository
      */
     public function __construct(
         UserRepository $repository)
@@ -31,7 +27,9 @@ class UserController extends Controller
     public function authenticated()
     {
         $authId = Authorizer::getResourceOwnerId();
-        $client = $this->repository->with('client')->find($authId);
+        $client = $this->repository
+            ->skipPresenter(false)
+            ->with('client')->find($authId);
 
         return $client;
     }

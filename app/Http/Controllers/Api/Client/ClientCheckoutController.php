@@ -2,40 +2,36 @@
 
 namespace CodeDelivery\Http\Controllers\Api\Client;
 
-use Illuminate\Http\Request;
 use CodeDelivery\Http\Requests;
-use Illuminate\Support\Facades\Auth;
 use CodeDelivery\Services\OrderService;
 use CodeDelivery\Http\Controllers\Controller;
 use CodeDelivery\Repositories\UserRepository;
 use CodeDelivery\Repositories\OrderRepository;
-use CodeDelivery\Repositories\ProductRepository;
+use CodeDelivery\Http\Requests\CheckoutRequest;
 use LucaDegasperi\OAuth2Server\Facades\Authorizer;
 
 class ClientCheckoutController extends Controller
 {
     protected $repository;
     protected $userRepository;
-    protected $productRepository;
     protected $service;
 
     /**
      * Checkout Controller constructor.
      * @param OrderRepository   $orderRepository
      * @param UserRepository    $userRepository
-     * @param ProductRepository $productRepository
      */
     public function __construct(
         OrderRepository $repository,
         UserRepository $userRepository,
-        ProductRepository $productRepository,
         OrderService $service)
     {
         $this->repository = $repository;
         $this->userRepository = $userRepository;
-        $this->productRepository = $productRepository;
         $this->service = $service;
     }
+
+    private $with = ['client', 'cupom', 'items'];
 
      /**
      * Display a listing of the resource.
@@ -46,8 +42,11 @@ class ClientCheckoutController extends Controller
     {
         $authId = Authorizer::getResourceOwnerId();
         $clientId = $this->userRepository->find($authId)->client->id;
-        $orders = $this->repository->with(['items'])->scopeQuery(function($query) use ($clientId) {
-            return $query->where('client_id', $clientId);
+        $orders = $this->repository
+            ->skipPresenter(false)
+            ->with($this->with)
+            ->scopeQuery(function($query) use ($clientId) {
+                return $query->where('client_id', $clientId);
         })->paginate();
 
         return $orders;
@@ -59,7 +58,7 @@ class ClientCheckoutController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CheckoutRequest $request)
     {
         $data = $request->all();
         $authId = Authorizer::getResourceOwnerId();
@@ -67,9 +66,7 @@ class ClientCheckoutController extends Controller
         $data['client_id'] = $clientId;
         $order = $this->service->create($data);
 
-        $order = $this->repository->with(['items'])->find($order->id);
-
-        return $order;
+        return $this->repository->skipPresenter(false)->with($this->with)->find($order->id);
     }
 
     /**
@@ -80,11 +77,6 @@ class ClientCheckoutController extends Controller
      */
     public function show($id)
     {
-        $order = $this->repository->with(['client', 'items', 'cupom'])->find($id);
-        $order->items->each(function($item) {
-            $item->product;
-        });
-
-        return $order;
+        return $this->repository->skipPresenter(false)->with($this->with)->find($id);;
     }
 }

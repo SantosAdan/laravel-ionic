@@ -9,6 +9,7 @@ use CodeDelivery\Services\OrderService;
 use CodeDelivery\Http\Controllers\Controller;
 use CodeDelivery\Repositories\UserRepository;
 use CodeDelivery\Repositories\OrderRepository;
+use CodeDelivery\Http\Requests\CheckoutRequest;
 use CodeDelivery\Repositories\ProductRepository;
 
 class CheckoutController extends Controller
@@ -58,7 +59,7 @@ class CheckoutController extends Controller
      */
     public function create()
     {
-        $products = $this->productRepository->lists();
+        $products = $this->productRepository->all();
 
         return view('customer.order.create', compact('products'));
     }
@@ -69,7 +70,7 @@ class CheckoutController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CheckoutRequest $request)
     {
         $data = $request->all();
         $clientId = $this->userRepository->find(Auth::user()->id)->client->id;
@@ -77,50 +78,5 @@ class CheckoutController extends Controller
         $this->service->create($data);
 
         return redirect()->route('customer.order.index');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

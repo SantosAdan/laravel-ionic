@@ -12,7 +12,8 @@ class Cupom extends Model implements Transformable
 
     protected $fillable = [
         'code',
-        'value'
+        'value',
+        'used'
     ];
 
 }

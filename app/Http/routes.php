@@ -77,7 +77,9 @@ Route::post('oauth/access_token', function() {
     return Response::json(Authorizer::issueAccessToken());
 });
 
+// Rotas de API
 Route::group(['prefix' => 'api', 'as' => 'api.', 'middleware' => 'oauth'], function() {
+    // Rota com dados do usuário logado
     Route::get('/authenticated', ['as' => 'authenticated', 'uses' => 'Api\UserController@authenticated']);
     //API CLIENTE
     Route::group(['prefix' => 'client', 'as' => 'client.', 'middleware' => 'oauth.checkrole:client'], function () {
@@ -90,6 +92,13 @@ Route::group(['prefix' => 'api', 'as' => 'api.', 'middleware' => 'oauth'], funct
 
     //API ENTREGADOR
     Route::group(['prefix' => 'deliveryman', 'as' => 'deliveryman.', 'middleware' => 'oauth.checkrole:deliveryman'], function () {
+        // Rotas para pedidos
+        Route::resource('order',
+            'Api\Deliveryman\DeliverymanCheckoutController',
+            ['except' => ['create', 'edit', 'destroy', 'store']]
+        );
 
+        // Rota para atualizar status do pedido
+        Route::patch('order/{id}/update-status', ['as' => 'order.update-status', 'uses' => 'Api\Deliveryman\DeliverymanCheckoutController@updateStatus']);
     });
 });
